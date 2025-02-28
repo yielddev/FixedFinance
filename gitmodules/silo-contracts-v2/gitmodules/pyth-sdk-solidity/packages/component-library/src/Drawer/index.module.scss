@@ -1,0 +1,77 @@
+@use "../theme";
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(from black r g b / 30%);
+  z-index: 1;
+
+  .drawer {
+    position: fixed;
+    top: theme.spacing(4);
+    bottom: theme.spacing(4);
+    right: theme.spacing(4);
+    width: 60%;
+    max-width: theme.spacing(160);
+    outline: none;
+    background: theme.color("background", "primary");
+    border: 1px solid theme.color("border");
+    border-radius: theme.border-radius("3xl");
+    display: flex;
+    flex-flow: column nowrap;
+    overflow-y: hidden;
+    padding-bottom: theme.border-radius("3xl");
+
+    .heading {
+      padding: theme.spacing(4);
+      padding-left: theme.spacing(6);
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: center;
+      color: theme.color("heading");
+      flex: none;
+      border-bottom: 1px solid theme.color("border");
+
+      .title {
+        @include theme.h4;
+
+        display: flex;
+        flex-flow: row nowrap;
+        gap: theme.spacing(3);
+      }
+
+      .headingEnd {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: theme.spacing(3);
+        align-items: center;
+      }
+    }
+
+    .body {
+      flex: 1;
+      overflow-y: auto;
+      padding: theme.spacing(6);
+    }
+
+    &[data-fill] {
+      .heading {
+        border: none;
+      }
+
+      .body {
+        padding: 0;
+      }
+    }
+
+    &[data-has-footer] {
+      padding-bottom: 0;
+
+      .footer {
+        border-top: 1px solid theme.color("border");
+        padding: theme.spacing(4);
+      }
+    }
+  }
+}

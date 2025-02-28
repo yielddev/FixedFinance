@@ -1,0 +1,67 @@
+@use "@pythnetwork/component-library/theme";
+
+.priceFeeds {
+  @include theme.max-width;
+
+  .header {
+    @include theme.h3;
+
+    color: theme.color("heading");
+    font-weight: theme.font-weight("semibold");
+  }
+
+  .body {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: theme.spacing(6);
+    margin-top: theme.spacing(6);
+
+    .feedKey {
+      margin: 0 -#{theme.button-padding("xs", true)};
+    }
+
+    .featuredFeeds,
+    .stats {
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+
+      & > * {
+        flex: 1 1 0px;
+        width: 0;
+      }
+    }
+
+    .stats {
+      gap: theme.spacing(6);
+    }
+
+    .featuredFeeds {
+      gap: theme.spacing(1);
+
+      .feedCardContents {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-between;
+        align-items: stretch;
+        padding: theme.spacing(3);
+        gap: theme.spacing(6);
+
+        .prices {
+          display: flex;
+          flex-flow: row nowrap;
+          justify-content: space-between;
+          align-items: center;
+          color: theme.color("heading");
+          font-weight: theme.font-weight("medium");
+          line-height: 1;
+          font-size: theme.font-size("base");
+
+          .changePercent {
+            font-size: theme.font-size("sm");
+          }
+        }
+      }
+    }
+  }
+}

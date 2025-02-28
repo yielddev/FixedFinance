@@ -1,0 +1,81 @@
+@use "@pythnetwork/component-library/theme";
+@use "../Root/index.module.scss" as root;
+
+.publishers {
+  @include theme.max-width;
+
+  .header {
+    @include theme.h3;
+
+    color: theme.color("heading");
+    font-weight: theme.font-weight("semibold");
+  }
+
+  .body {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: theme.spacing(12);
+    align-items: flex-start;
+    margin-top: theme.spacing(6);
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: theme.spacing(4);
+      align-items: center;
+      width: 40%;
+      position: sticky;
+      top: root.$header-height;
+
+      .averageMedianScoreExplainButton {
+        margin-top: -#{theme.button-padding("xs", false)};
+        margin-right: -#{theme.button-padding("xs", false)};
+      }
+
+      .oisCard {
+        grid-column: span 2 / span 2;
+
+        .oisPool {
+          .title {
+            font-size: theme.font-size("sm");
+            font-weight: theme.font-weight("normal");
+            color: theme.color("heading");
+            margin: 0;
+          }
+
+          .poolUsed {
+            margin: 0;
+            color: theme.color("heading");
+
+            @include theme.h3;
+          }
+
+          .poolTotal {
+            margin: 0;
+            color: theme.color("muted");
+            font-size: theme.font-size("sm");
+            font-weight: theme.font-weight("normal");
+          }
+        }
+
+        .oisStats {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: theme.spacing(1);
+        }
+      }
+    }
+
+    .publishersCard {
+      width: 60%;
+    }
+  }
+}
+
+.averageMedianScoreDescription {
+  margin: 0;
+
+  b {
+    font-weight: theme.font-weight("semibold");
+  }
+}
