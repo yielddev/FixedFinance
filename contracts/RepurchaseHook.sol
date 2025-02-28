@@ -4,7 +4,6 @@ pragma solidity ^0.8.28;
 import {IHookReceiver} from "silo-core-v2/interfaces/IHookReceiver.sol";
 import {ISiloConfig} from "silo-core-v2/interfaces/ISiloConfig.sol";
 import {ISilo} from "silo-core-v2/interfaces/ISilo.sol";
-import {console} from "forge-std/console.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {Hook} from "silo-core-v2/lib/Hook.sol";
@@ -20,7 +19,6 @@ contract RepurchaseHook is BaseHookReceiver {
     error UnexpectedCollateralToken();
     error UnexpectedDebtToken();
     error NoDebtToCover();
-    error FullLiquidationRequired();
     error UserIsSolvent();
     error UnknownRatio();
     error NoRepayAssets();
@@ -55,7 +53,6 @@ contract RepurchaseHook is BaseHookReceiver {
 
         (uint256 hooksBefore0, uint256 hooksAfter0) = _hookReceiverConfig(underlyingAssetSilo);
         hooksBefore0 = Hook.addAction(hooksBefore0, Hook.BORROW);
-        // hooksBefore0 = Hook.addAction(hooksBefore0, Hook.shareTokenTransfer(Hook.DEBT_TOKEN));
 
         hooksAfter0 = Hook.addAction(hooksAfter0, Hook.BORROW);
         hooksAfter0 = Hook.addAction(hooksAfter0, Hook.REPAY);
@@ -66,9 +63,7 @@ contract RepurchaseHook is BaseHookReceiver {
     }
 
     function beforeAction(address _silo, uint256 _action, bytes calldata _inputAndOutput) external {
-        console.log("Hook Fired");
         if (Hook.matchAction(_action, Hook.BORROW)) {
-            console.log("Before Borrow Hook Fired");
             Hook.BeforeBorrowInput memory borrow = Hook.beforeBorrowDecode(_inputAndOutput);
             uint256 haircut = ((loans[borrow.borrower].price + borrow.assets) * 500) / 10_000;
             if(IERC20(ISilo(_silo).asset()).allowance(borrow.receiver, address(this)) < haircut) {
@@ -100,7 +95,6 @@ contract RepurchaseHook is BaseHookReceiver {
                 IERC20(ISilo(_silo).asset()).safeTransferFrom(borrow.receiver, address(this), haircut);
                 IERC20(ISilo(_silo).asset()).approve(_silo, haircut);
                 uint256 shares = ISilo(_silo).deposit(haircut, address(this));
-                console.log("shares", shares);
                 (bool success, bytes memory data) = ISilo(_silo).callOnBehalfOfSilo(_silo,
                     uint256(0), ISilo.CallType.Call,
                     abi.encodeWithSelector(IShareToken.burn.selector, address(this), address(this), shares));
